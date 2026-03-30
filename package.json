@@ -1,0 +1,6 @@
+{
+  "name": "ui5-excel-import",
+  "version": "1.0.0",
+  "description": "Reusable Excel Import Library for SAP UI5",
+  "license": "MIT"
+}
