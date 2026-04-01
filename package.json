@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Reusable Excel Import Library for SAP UI5 - Production-ready with error handling, validation, and comprehensive testing",
   "license": "MIT",
-  "author": "Your Company",
+  "author": "wusxo24",
   "homepage": "https://github.com/wusxo24/ui5-excel-import",
   "repository": {
     "type": "git",
