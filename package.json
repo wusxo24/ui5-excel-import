@@ -1,6 +1,6 @@
 {
   "name": "ui5-excel-import",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Reusable Excel Import Library for SAP UI5 - Production-ready with error handling, validation, and comprehensive testing",
   "license": "MIT",
   "author": "wusxo24",

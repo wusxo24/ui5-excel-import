@@ -131,7 +131,7 @@ describe("Coverage 100% - Edge Cases & Scenarios", () => {
     it("should throw error when aliases is not array", () => {
       expect(() => {
         ColumnDetectorModule.mapColumns([{ header1: "value1" }], { col1: "header1" });
-      }).toThrow("Aliases for field 'col1' must be an array");
+      }).toThrow("Aliases for field \"col1\" must be an array");
     });
 
     it("should map columns when all headers match", () => {
