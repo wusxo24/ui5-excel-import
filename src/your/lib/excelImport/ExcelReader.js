@@ -3,32 +3,104 @@ sap.ui.define([
 ], function () {
   "use strict";
 
+  /**
+   * Reads and parses Excel files (.xlsx)
+   * @namespace your.lib.excelImport.ExcelReader
+   */
   return {
 
+    /**
+     * Reads an Excel file and converts it to JSON array
+     * @param {File} file - The Excel file to read
+     * @returns {Promise<Array<Object>>} Promise resolving to array of row objects
+     * @throws {Error} If file is not valid, is not an Excel file, or reading fails
+     * @example
+     * const rows = await ExcelReader.read(excelFile);
+     * // Returns: [{col1: 'value1', col2: 'value2'}, ...]
+     */
     read(file) {
+      // Validate input
+      if (!file) {
+        return Promise.reject(new Error("File is required"));
+      }
+
+      if (!(file instanceof File) && !(file instanceof Blob)) {
+        return Promise.reject(new Error("Invalid file object"));
+      }
+
+      // Validate file type
+      if (!this._isExcelFile(file)) {
+        return Promise.reject(new Error("File must be an Excel file (.xlsx, .xls, .csv)"));
+      }
 
       return new Promise((resolve, reject) => {
-
         const reader = new FileReader();
 
-        reader.onload = function (e) {
+        reader.onload = (e) => {
+          try {
+            const data = e.target.result;
 
-          const data = e.target.result;
+            if (!data) {
+              reject(new Error("Failed to read file data"));
+              return;
+            }
 
-          const workbook = XLSX.read(data, { type: "binary" });
+            const workbook = XLSX.read(data, { type: "binary" });
 
-          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            if (!workbook || !workbook.SheetNames || workbook.SheetNames.length === 0) {
+              reject(new Error("Excel file has no sheets or is corrupted"));
+              return;
+            }
 
-          const json = XLSX.utils.sheet_to_row_object_array(sheet);
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = XLSX.utils.sheet_to_row_object_array(sheet);
 
-          resolve(json);
+            if (!json || json.length === 0) {
+              reject(new Error("Excel sheet is empty or contains no valid data"));
+              return;
+            }
+
+            resolve(json);
+          } catch (error) {
+            reject(new Error(`Failed to parse Excel file: ${error.message}`));
+          }
         };
 
-        reader.onerror = reject;
+        reader.onerror = () => {
+          reject(new Error("Failed to read file: FileReader error"));
+        };
 
-        reader.readAsBinaryString(file);
+        reader.onabort = () => {
+          reject(new Error("File reading was aborted"));
+        };
 
+        try {
+          reader.readAsBinaryString(file);
+        } catch (error) {
+          reject(new Error(`Failed to initiate file reading: ${error.message}`));
+        }
       });
+    },
+
+    /**
+     * Validates if file is an Excel file
+     * @private
+     * @param {File} file - File to validate
+     * @returns {boolean} True if file appears to be Excel format
+     */
+    _isExcelFile(file) {
+      const excelMimeTypes = [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-excel",
+        "text/csv"
+      ];
+
+      const excelExtensions = [".xlsx", ".xls", ".csv"];
+      const fileName = file.name || "";
+      const hasValidExtension = excelExtensions.some(ext => fileName.toLowerCase().endsWith(ext));
+      const hasValidMimeType = excelMimeTypes.includes(file.type);
+
+      return hasValidExtension || hasValidMimeType || fileName.toLowerCase().endsWith(".xlsx");
     }
 
   };

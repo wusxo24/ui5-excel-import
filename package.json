@@ -1,6 +1,51 @@
 {
   "name": "ui5-excel-import",
   "version": "1.0.0",
-  "description": "Reusable Excel Import Library for SAP UI5",
-  "license": "MIT"
+  "description": "Reusable Excel Import Library for SAP UI5 - Production-ready with error handling, validation, and comprehensive testing",
+  "license": "MIT",
+  "author": "Your Company",
+  "homepage": "https://github.com/wusxo24/ui5-excel-import",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wusxo24/ui5-excel-import.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wusxo24/ui5-excel-import/issues"
+  },
+  "keywords": [
+    "ui5",
+    "sap",
+    "excel",
+    "import",
+    "library",
+    "reusable"
+  ],
+  "main": "src/your/lib/excelImport/ExcelImportFacade.js",
+  "files": [
+    "src/",
+    "lib/",
+    "template/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/ test/",
+    "lint:fix": "eslint src/ test/ --fix",
+    "build": "npm run lint && npm run test",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@ui5/cli": "^3.0.0",
+    "eslint": "^8.57.1",
+    "jest": "^29.0.0"
+  },
+  "ui5": {
+    "specVersion": "3.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
 }
