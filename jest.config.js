@@ -12,6 +12,10 @@ module.exports = {
     "!src/**/*.d.js",
     "!src/**/index.js"
   ],
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
+  coveragePathIgnorePatterns: ["/node_modules/", "/test/"],
+  coverageDirectory: "coverage",
+  coverageReporters: ["text", "lcov", "html"],
   coverageThreshold: {
     global: {
       branches: 70,
