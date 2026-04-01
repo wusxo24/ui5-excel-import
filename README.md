@@ -580,7 +580,7 @@ npm run test:coverage      # Coverage report
 
 **Happy Path Tests (50%):**
 - Successful file parsing
-- Column mapping with aliases  
+- Column mapping with aliases
 - Batch processing
 - API requests & responses
 - Complete workflows

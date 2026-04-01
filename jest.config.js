@@ -24,10 +24,6 @@ module.exports = {
       statements: 80
     }
   },
-  testPathIgnorePatterns: [
-    "/node_modules/",
-    "/dist/"
-  ],
   setupFilesAfterEnv: ["<rootDir>/test/setup.js"],
   globals: {
     // Mock global XLSX object from xlsx library
