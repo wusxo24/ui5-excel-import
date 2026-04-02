@@ -638,6 +638,46 @@ ui5-excel-import/
 - Fetch API
 - AbortController (for timeouts)
 
+## Library Dependencies
+
+### SheetJS (XLSX) Bundling
+
+This library includes **SheetJS (XLSX) pre-bundled** (~1.3 MB) for out-of-the-box Excel parsing.
+
+**If your project already uses SheetJS**, you have two options to avoid double bundling:
+
+#### Option A: Use Your Existing SheetJS (Recommended)
+If your project already has SheetJS loaded, configure your build to exclude our bundle:
+
+```javascript
+// In your build/webpack config
+{
+  alias: {
+    // Skip the bundled version, use your existing XLSX
+    'your/lib/xlsx/xlsx.bundle': 'path/to/your/xlsx'
+  }
+}
+```
+
+Or in **UI5 .ui5rc.json**:
+```json
+{
+  "customPaths": {
+    "your/lib/xlsx/xlsx.bundle": "./node_modules/xlsx/dist/xlsx.min.js"
+  }
+}
+```
+
+#### Option B: Use Library Bundle (Default)
+Leave the configuration as-is. Library will use its bundled XLSX version.
+
+**Note:** v1.2.0 will make XLSX loading optional/configurable to eliminate this concern entirely.
+
+### Size Impact
+- Library with XLSX: 390 KB (compressed)
+- Without XLSX (when provided): ~50 KB (compressed)
+- Savings if you exclude bundle: ~340 KB
+
 ## Deprecations
 
 ### `postOnly()` - Deprecated
@@ -754,13 +794,39 @@ sap.ui.define([
 
 ## Version History
 
-### v1.0.0 (Current)
+### v1.1.0 (Current)
+- ✅ 119 comprehensive tests (up from 64)
+- ✅ Edge case & boundary condition coverage
+- ✅ Enhanced backend integration documentation (SAP FI example)
+- ✅ All tests passing with 0 lint errors
+- 📝 Added SheetJS bundling documentation
+- 📝 Note: Optional XLSX loading coming in v1.2.0
+
+### v1.0.0
 - ✅ Comprehensive error handling
 - ✅ Full JSDoc documentation
 - ✅ 80%+ test coverage
 - ✅ Production-ready
-- ✨ New `parseAndPost()` method
-- ⚠️ Deprecated `postOnly()` method
+- ✨ Facade pattern API
+- ✅ Zero external npm dependencies
+
+## Roadmap
+
+### v1.2.0 (Q2 2026)
+- Optional XLSX loading (avoid double bundling)
+  - Make XLSX injectable
+  - Detect existing global XLSX
+  - Reduce bundle size by ~340KB for users with existing XLSX
+- FieldValidator module for field-level validation
+- Additional backend integration examples (REST, GraphQL)
+- Performance optimizations for 50,000+ row datasets
+
+### v1.3.0+ (Future)
+- Export to Excel capability (write back)
+- PDF export support
+- Data transformation templates
+- Rate limiting for batch processing
+- Streaming for very large files
 
 ## License
 

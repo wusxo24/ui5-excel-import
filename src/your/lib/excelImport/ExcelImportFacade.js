@@ -14,6 +14,27 @@ sap.ui.define([
   return {
 
     /**
+     * Configure the XLSX library to use for Excel parsing
+     * Call this once at application startup to inject external XLSX library.
+     * This allows using your existing XLSX instead of the bundled version,
+     * reducing bundle size by ~340 KB.
+     * @param {Object} xlsxLib - SheetJS/XLSX library instance
+     * @throws {Error} If xlsxLib is invalid or missing required methods
+     * @example
+     * import ExcelImport from 'ui5-excel-import';
+     * import XLSX from 'xlsx';
+     *
+     * // At app startup
+     * ExcelImport.configureXLSX(XLSX);
+     *
+     * // Now all parseOnly/parseAndPost calls use your XLSX
+     * const result = await ExcelImport.parseOnly({ file, columns });
+     */
+    configureXLSX(xlsxLib) {
+      Reader.setXLSX(xlsxLib);
+    },
+
+    /**
      * Parses Excel file and maps columns without posting data
      * @param {Object} options - Configuration options
      * @param {File} options.file - Excel file to parse

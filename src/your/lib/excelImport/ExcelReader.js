@@ -1,13 +1,66 @@
 sap.ui.define([
   "your/lib/xlsx/xlsx.bundle"
-], function () {
+], function (bundledXLSX) {
   "use strict";
 
   /**
    * Reads and parses Excel files (.xlsx)
    * @namespace your.lib.excelImport.ExcelReader
    */
+
+  // Store for injected XLSX instance (optional, for external libraries)
+  let injectedXLSX = null;
+
   return {
+
+    /**
+     * Set the XLSX library instance (for dependency injection)
+     * This allows using an external XLSX library instead of the bundled one.
+     * Call this at application startup to avoid double-bundling.
+     * @param {Object} xlsxLib - SheetJS/XLSX library instance with read() and utils properties
+     * @throws {Error} If xlsxLib is invalid or missing required methods
+     * @example
+     * import XLSX from 'xlsx';
+     * ExcelReader.setXLSX(XLSX);
+     */
+    setXLSX(xlsxLib) {
+      if (!xlsxLib) {
+        throw new Error("XLSX library instance is required");
+      }
+
+      if (typeof xlsxLib.read !== "function") {
+        throw new Error("XLSX library must have a read() method");
+      }
+
+      if (!xlsxLib.utils || typeof xlsxLib.utils.sheet_to_row_object_array !== "function") {
+        throw new Error("XLSX library must have utils.sheet_to_row_object_array() method");
+      }
+
+      injectedXLSX = xlsxLib;
+    },
+
+    /**
+     * Get the active XLSX instance (injected or bundled)
+     * @private
+     * @returns {Object} The XLSX library instance
+     * @throws {Error} If no XLSX instance is available
+     */
+    _getXLSX() {
+      // Prefer injected instance
+      if (injectedXLSX) {
+        return injectedXLSX;
+      }
+
+      // Fall back to bundled XLSX
+      if (bundledXLSX) {
+        return bundledXLSX;
+      }
+
+      // Error if neither available
+      throw new Error(
+        "XLSX library not available. Either bundle includes it or call setXLSX() with your XLSX instance."
+      );
+    },
 
     /**
      * Reads an Excel file and converts it to JSON array
@@ -45,6 +98,7 @@ sap.ui.define([
               return;
             }
 
+            const XLSX = this._getXLSX();
             const workbook = XLSX.read(data, { type: "binary" });
 
             if (!workbook || !workbook.SheetNames || workbook.SheetNames.length === 0) {
